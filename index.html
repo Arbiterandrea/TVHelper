@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuale TV</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f0f0f0; }
+        .screen { display: none; text-align: center; padding: 40px; background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .screen.active { display: block; }
+        h1 { color: #333; }
+        p { font-size: 18px; }
+        img { max-width: 100%; height: auto; margin: 20px 0; border-radius: 8px; }
+        button { background: #007bff; color: white; border: none; padding: 15px 30px; margin: 10px; border-radius: 5px; font-size: 18px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+
+        /* coriandoli */
+        .confetti {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 999;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 8px; height: 14px;
+            background: red;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0%   { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Schermata 0: scelta iniziale -->
+    <div class="screen active" id="screen0">
+        <h1>Vuoi usare SKY o vedere REAL TIME?</h1>
+        <button onclick="scegliSky()">SKY</button>
+        <button onclick="scegliRealTime()">REAL TIME</button>
+    </div>
+
+    <!-- Flusso SKY -->
+    <div class="screen" id="screenSky1">
+        <h1>Passo 1 - SKY</h1>
+        <p>Premi il bottone cerchiato di rosso.</p>
+        <img src="IMG_9011-2.jpg" alt="Telecomando SKY">
+        <button onclick="vaiASky2()">Fatto?</button>
+    </div>
+
+    <div class="screen" id="screenSky2">
+        <h1>Passo 2 - SKY</h1>
+        <p>Premi HDMI 3, dopodiché accendi SKY con il telecomando.</p>
+        <img src="IMG_9018-2.jpg" alt="HDMI 3">
+    </div>
+
+    <!-- Flusso REAL TIME -->
+    <div class="screen" id="screenReal1">
+        <h1>Passo 1 - REAL TIME</h1>
+        <p>Premi il seguente bottone sul telecomando.</p>
+        <img src="IMG_9014-3.jpg" alt="Bottone Home telecomando">
+        <button onclick="vaiAReal2()">Fatto?</button>
+    </div>
+
+    <div class="screen" id="screenReal2">
+        <h1>Passo 2 - REAL TIME</h1>
+        <p>Apri l'app IPTV che vedi cerchiata nell'immagine.</p>
+        <img src="IMG_9015-2.jpg" alt="App IPTV">
+        <button onclick="vaiAReal3()">Fatto?</button>
+    </div>
+
+    <div class="screen" id="screenReal3">
+        <h1>Passo 3 - REAL TIME</h1>
+        <p>Ora seleziona la categoria Discovery e clicca Real Time and enjoy your show.</p>
+        <img src="IMG_9018-2.jpg" alt="HDMI 3 / IPTV">
+    </div>
+
+    <!-- contenitore coriandoli -->
+    <div id="confettiContainer" class="confetti" style="display:none;"></div>
+
+    <script>
+        function mostraSchermo(id) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function scegliSky() {
+            stopConfetti();
+            mostraSchermo('screenSky1');
+        }
+
+        function scegliRealTime() {
+            stopConfetti();
+            mostraSchermo('screenReal1');
+        }
+
+        function vaiASky2() {
+            mostraSchermo('screenSky2');
+            startConfetti(); // coriandoli per SKY
+        }
+
+        function vaiAReal2() {
+            stopConfetti();
+            mostraSchermo('screenReal2');
+        }
+
+        function vaiAReal3() {
+            mostraSchermo('screenReal3');
+            startConfetti(); // coriandoli per REAL TIME
+        }
+
+        // coriandoli semplici
+        let confettiTimeout;
+        function startConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = '';
+            container.style.display = 'block';
+
+            for (let i = 0; i < 80; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.backgroundColor = ['#ff4757','#1e90ff','#2ed573','#ffa502','#eccc68'][Math.floor(Math.random()*5)];
+                piece.style.animationDelay = (Math.random() * 2) + 's';
+                piece.style.animationDuration = (2 + Math.random() * 3) + 's';
+                container.appendChild(piece);
+            }
+
+            confettiTimeout = setTimeout(stopConfetti, 6000);
+        }
+
+        function stopConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.style.display = 'none';
+            container.innerHTML = '';
+            if (confettiTimeout) clearTimeout(confettiTimeout);
+        }
+    </script>
+</body>
+</html>
